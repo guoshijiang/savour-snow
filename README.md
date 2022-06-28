@@ -1,2 +1,2 @@
 # snow
-snow is savour  wallet sdk by node
+snow 是 Savour 项目钱的 NodeJs 代码

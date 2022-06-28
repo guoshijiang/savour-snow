@@ -10,10 +10,33 @@
     "type": "git",
     "url": "git+https://github.com/SavourDao/snow.git"
   },
-  "author": "",
+  "author": "shijiang.guo",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/SavourDao/snow/issues"
   },
-  "homepage": "https://github.com/SavourDao/snow#readme"
+  "homepage": "https://github.com/SavourDao/snow#readme",
+  "dependencies": {
+    "bip32": "^3.0.1",
+    "bip39": "^3.0.4",
+    "bitcoinjs-lib": "^6.0.1",
+    "ethereumjs-tx": "^2.1.2",
+    "ethereumjs-wallet": "^1.0.2",
+    "keythereum": "^1.2.0",
+    "ed25519-hd-key": "^1.2.0"
+  },
+  "devDependencies": {
+    "@midwayjs/cli": "1.0.0",
+    "@midwayjs/luckyeye": "1.0.0",
+    "@midwayjs/mock": "2.3.0",
+    "@types/jest": "26.0.10",
+    "@types/koa-bodyparser": "4.3.0",
+    "@types/node": "14",
+    "cross-env": "6.0.0",
+    "jest": "26.4.0",
+    "mwts": "1.0.5",
+    "ts-jest": "26.2.0",
+    "ts-node": "10.4.0",
+    "typescript": "4.2.4"
+  }
 }
