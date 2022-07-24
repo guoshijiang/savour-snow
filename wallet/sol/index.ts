@@ -1,5 +1,7 @@
 const bs58 = require("bs58")
 const { derivePath, getPublicKey } = require('ed25519-hd-key')
+import {PublicKey, Keypair, Transaction, SystemProgram} from "@solana/web3.js";
+const BigNumber = require("bignumber.js");
 
 
 export function createAddress(seedHex) {
@@ -16,6 +18,20 @@ export function createAddress(seedHex) {
 }
 
 
-export function sign() {
-
+export async function signTransaction(params) {
+    const { amount, to, nonce, decimal, privateKey } = params;
+    const fromAccount = Keypair.fromSecretKey(new Uint8Array(Buffer.from(privateKey, "hex")), {skipValidation: true});
+    const calcAmount = new BigNumber(amount).times(new BigNumber(10).pow(decimal)).toString();
+    if (calcAmount.indexOf(".") !== -1) throw new Error("decimal 无效");
+    let tx = new Transaction();
+    tx.recentBlockhash = nonce;
+    tx.add(
+        SystemProgram.transfer({
+            fromPubkey: fromAccount.publicKey,
+            toPubkey: new PublicKey(to),
+            lamports: calcAmount,
+        })
+    );
+    tx.sign(fromAccount);
+    return tx.serialize().toString("base64");
 }
