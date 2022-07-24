@@ -1,7 +1,7 @@
 {
   "compileOnSave": true,
   "compilerOptions": {
-    "target": "ES2018",
+    "target": "ES2020",
     "module": "commonjs",
     "moduleResolution": "node",
     "experimentalDecorators": true,
@@ -14,7 +14,17 @@
     "pretty": true,
     "declaration": false,
     "typeRoots": ["./typings", "./node_modules/@types"],
-    "outDir": "dist"
+    "outDir": "dist",
+    "allowJs": false,
+    "strict": true,
+    "noImplicitAny": false,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "strictBindCallApply": true,
+    "strictPropertyInitialization": true,
+    "alwaysStrict": true,
+    "esModuleInterop": false,
+    "noUnusedParameters": false
   },
   "exclude": ["dist", "node_modules", "test"]
 }
