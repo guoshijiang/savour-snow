@@ -203,7 +203,7 @@ function createTransaction(params) {
     return transferContractTx;
 }
 
-function createTRC20TxByData(from: string, contract: string, feeLimit: number, refBlock: RefBlock,
+function createTRC20TxByData(from: string, contract: string, feeLimit: number, refBlock: any,
     dataHex: string, expiration?: number, permissionId?: number, time?: any) {
     if (refBlock && refBlock.blockHash) {
         const parameter = {
