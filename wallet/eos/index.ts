@@ -37,15 +37,17 @@ export function createAddress(seedHex: string): string {
  * @param privateKeyHex 
  * @returns 
  */
-export async function sign(privateKeyHex: string, signObj: any,) {
+export async function signTransaction(params: any) {
+    const { privateKey, chainId, from, to, quantity, memo, expiration, block, prefix } = params;
     const TRANSFER_ACTION_ACOUNT = "eosio.token";
     const TRANSFER_ACTION_NAME = "transfer";
     const TRANSFER_ROLE = "acitve";
     const TRANSFER_UNIT = "eos";
     // private key hex to wif
-    const wifKey = eccEos.PrivateKey.fromHex(
-        privateKeyHex
-    ).toWif();
+    const wifKey = eccEos.PrivateKey.fromWif(
+        privateKey
+    );
+    const privKeys = [privateKey];
     const pubKeys = [wifKey.toPublic().toString()];
     //序列化交易对象
     const serdata = {
@@ -57,19 +59,19 @@ export async function sign(privateKeyHex: string, signObj: any,) {
             {
                 account: TRANSFER_ACTION_ACOUNT,
                 name: TRANSFER_ACTION_NAME,
-                authorization: [{ actor: signObj.from, permission: TRANSFER_ROLE }],
+                authorization: [{ actor: from, permission: TRANSFER_ROLE }],
                 data: dataToAbiBinargs({
-                    from: signObj.from,
-                    to: signObj.to,
-                    quantity: `${signObj.quantity} ${TRANSFER_UNIT}`,
-                    memo: signObj.memo
+                    from: from,
+                    to: to,
+                    quantity: `${quantity} ${TRANSFER_UNIT}`,
+                    memo: memo || ""
                 }),
             },
         ],
         transaction_extensions: [],
-        expiration: signObj.expiration,
-        ref_block_num: signObj.block & 0xffff,
-        ref_block_prefix: signObj.prefix,
+        expiration: expiration,
+        ref_block_num: block & 0xffff,
+        ref_block_prefix: prefix,
     };
     let buffer = new SerialBuffer({
         textEncoder: TextEncoder,
@@ -81,10 +83,10 @@ export async function sign(privateKeyHex: string, signObj: any,) {
     );
     transactionTypes.get("transaction").serialize(buffer, serdata);
     // 构造签名
-    const signatureProvider = new JsSignatureProvider([wifKey]);
+    const signatureProvider = new JsSignatureProvider(privKeys);
     // 签名
     const signature = await signatureProvider.sign({
-        chainId: signObj.chainId,
+        chainId: chainId,
         requiredKeys: pubKeys,
         serializedTransaction: buffer.asUint8Array(),
     });
