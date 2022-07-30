@@ -4,11 +4,11 @@ const bip32 = BIP32Factory(ecc);
 import { keccak256 } from "js-sha3";
 import { hexStr2byteArray } from "@tronscan/client/src/lib/code";
 import { publicKeyConvert } from "secp256k1";
-import CryptoUtils from "@tronscan/client/src/utils/crypto";
-import Bytes from "@tronscan/client/src/utils/bytes";
+import { getBase58CheckAddress, signTransaction as cryptoSignTransaction, decode58Check } from "@tronscan/client/src/utils/crypto";
+import { byteArray2hexStr } from "@tronscan/client/src/utils/bytes";
 import { ethers } from "ethers";
 import BigNumber from "bignumber.js";
-import TransactionUtils from "@tronscan/client/src/utils/transactionBuilder";
+import { buildTransferContract } from "@tronscan/client/src/utils/transactionBuilder";
 import {
     TriggerSmartContract,
     TransferContract,
@@ -35,7 +35,7 @@ export function createAddress(seedHex: string): string {
     const child = node.derivePath(`m/44'/195'/0'/0/0`);
     const privateKey = child.privateKey.toString('hex');
     const publickKey = child.publicKey.toString('hex');
-    const address = CryptoUtils.getBase58CheckAddress(computeAddress(publickKey));
+    const address = getBase58CheckAddress(computeAddress(hexStr2byteArray(publickKey)));
     return JSON.stringify({
         privateKey,
         publickKey,
@@ -66,30 +66,32 @@ function computeAddress(pubBytes) {
  * @param tx 
  * @returns 
  */
-export async function sign(privateKeyHex: string, signObj: any): Promise<string> {
+export async function signTransaction(params: any): Promise<string> {
+    const { privateKey, from, to, amount, energyLimit, energyPrice, refBlock, tokenAddress, tokenTRC10, expiration } = params;
     const time = Date.now();
+    const feeLimit = energyLimit * energyPrice; // SUN
     let rawTx = buildTronTransaction({
-        from: signObj.from,
-        to: signObj.to,
-        amount: signObj.amount,
-        feeLimit: signObj.feeLimit,
-        refBlock: signObj.refBlock,
-        tokenAddress: signObj.tokenAddress || NULLTOKENADDR,
-        tokenTRC10: signObj.tokenTRC10,
-        expiration: signObj.expiration,
-        permissionId: signObj.permissionId || 0,
+        from,
+        to: to,
+        amount: amount,
+        feeLimit: feeLimit,
+        refBlock: refBlock,
+        tokenAddress: tokenAddress || NULLTOKENADDR,
+        tokenTRC10: tokenTRC10,
+        expiration: expiration,
+        permissionId: 0,
         time
     });
-    let signedTx: any = signTx(privateKeyHex, rawTx);
+    let signedTx: any = signTx(privateKey, rawTx);
     return signedTx.hex;
 }
 
 function signTx(privateKey, transaction) {
-    let signedTx = CryptoUtils.signTransaction(privateKey, transaction);
+    let signedTx = cryptoSignTransaction(privateKey, transaction);
     return {
         signedTx,
         hex: signedTx.hex,
-        sig: Bytes.byteArray2hexStr(
+        sig: byteArray2hexStr(
             signedTx.transaction.getSignatureList()[0]
         ),
     };
@@ -182,7 +184,7 @@ function createTransaction(params) {
         fromHexString(params.owner_address)
     );
     transferContract.setAmount(params.amount);
-    let transferContractTx = TransactionUtils.buildTransferContract(
+    let transferContractTx = buildTransferContract(
         transferContract,
         Transaction.Contract.ContractType.TRANSFERCONTRACT,
         "TransferContract"
@@ -234,7 +236,7 @@ function triggerSmartContract(params) {
         fromHexString(params.contract_address)
     );
     contract.setData(fromHexString(params.data));
-    let smartContractTx = TransactionUtils.buildTransferContract(
+    let smartContractTx = buildTransferContract(
         contract,
         Transaction.Contract.ContractType.TRIGGERSMARTCONTRACT,
         "TriggerSmartContract"
@@ -264,7 +266,7 @@ function triggerAssetContract(params) {
     );
     assetContract.setAssetName(encodeString(params.token));
     assetContract.setAmount(params.amount);
-    let assetContractTx = TransactionUtils.buildTransferContract(
+    let assetContractTx = buildTransferContract(
         assetContract,
         Transaction.Contract.ContractType.TRANSFERASSETCONTRACT,
         "TransferAssetContract"
@@ -295,5 +297,5 @@ function encodeData(to: string, amountBig: BigNumber) {
 const fromHexString = hexString => new Uint8Array(hexString.match(/.{1,2}/g).map(byte => parseInt(byte, 16)));
 
 function decode58ToHex(addressBase58) {
-    return Bytes.byteArray2hexStr(CryptoUtils.decode58Check(addressBase58));
+    return byteArray2hexStr(decode58Check(addressBase58));
 }
