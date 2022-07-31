@@ -1,18 +1,26 @@
 {
-  "name": "snow",
+  "name": "savour-snow",
   "version": "1.0.0",
-  "description": "snow is savour  wallet sdk by node",
+  "description": "snow is savour wallet sdk by node",
   "main": "index.js",
   "scripts": {
     "tsc": "npm run clean && tsc",
     "clean": "rm -rf dist",
+    "build": "tsc -p tsconfig.json",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/SavourDao/snow.git"
   },
-  "author": "shijiang.guo",
+  "authors": [
+    {
+      "name": "guoshijiang"
+    },
+    {
+      "name": "stone shi"
+    }
+  ],
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/SavourDao/snow/issues"
