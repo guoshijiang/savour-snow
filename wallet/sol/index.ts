@@ -4,8 +4,8 @@ import {PublicKey, Keypair, Transaction, SystemProgram} from "@solana/web3.js";
 const BigNumber = require("bignumber.js");
 
 
-export function createAddress(seedHex) {
-    const { key } = derivePath("m/44'/501'/1'/0'", seedHex);
+export function createSolAddress(seedHex:string, addressIndex:string) {
+    const { key } = derivePath("m/44'/501'/1'/" +  addressIndex + "", seedHex);
     const publicKey = getPublicKey(new Uint8Array(key), false).toString("hex")
     const buffer = Buffer.from(getPublicKey(new Uint8Array(key), false).toString("hex"), "hex");
     const address = bs58.encode(buffer)
@@ -18,7 +18,7 @@ export function createAddress(seedHex) {
 }
 
 
-export async function signTransaction(params) {
+export async function signSolTransaction(params) {
     const { amount, to, nonce, decimal, privateKey } = params;
     const fromAccount = Keypair.fromSecretKey(new Uint8Array(Buffer.from(privateKey, "hex")), {skipValidation: true});
     const calcAmount = new BigNumber(amount).times(new BigNumber(10).pow(decimal)).toString();
