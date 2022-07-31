@@ -14,7 +14,7 @@ parent:
   <a href="https://github.com/SavourDao/savour-core/blob/main/LICENSE">
     <img alt="License: Apache-2.0" src="https://img.shields.io/github/license/SavourDao/savour-core.svg" />
   </a>
-  <a href="https://pkg.go.dev/github.com/SavourDao/savour-core">
+  <a href="https://nodejs.org/github.com/SavourDao/savour-core">
     <img alt="GoDoc" src="https://godoc.org/github.com/SavourDao/savour-core?status.svg" />
   </a>
 </div>
