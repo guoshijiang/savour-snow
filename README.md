@@ -8,8 +8,8 @@ parent:
 </div>
 
 <div align="center">
-  <a href="https://github.com/SavourDao/savour-core/releases/latest">
-    <img alt="Version" src="https://img.shields.io/github/tag/SavourDao/savour-core.svg" />
+  <a href="https://github.com/SavourDao/snow/releases/latest">
+    <img alt="Version" src="https://img.shields.io/github/tag/snow/savour-core.svg" />
   </a>
   <a href="https://github.com/SavourDao/savour-core/blob/main/LICENSE">
     <img alt="License: Apache-2.0" src="https://img.shields.io/github/license/SavourDao/savour-core.svg" />
