@@ -14,9 +14,6 @@ parent:
   <a href="https://github.com/SavourDao/savour-core/blob/main/LICENSE">
     <img alt="License: Apache-2.0" src="https://img.shields.io/github/license/SavourDao/savour-core.svg" />
   </a>
-  <a href="https://www.npmjs.com/package/savour-snow">
-    <img alt="NodeDoc" src="https://godoc.org/github.com/SavourDao/savour-core?status.svg" />
-  </a>
 </div>
 
 snow 是 Savour 钱包的 sdk 项目
