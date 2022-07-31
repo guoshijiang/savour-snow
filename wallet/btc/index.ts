@@ -5,9 +5,12 @@ const bitcoin = require("bitcoinjs-lib");
 const bitcore = require("bitcore-lib");
 // bitcoin.initEccLib(ecc); // NEED THIS FOR TAPROOT
 
-export function createAddress(seedHex: string, network: string): string {
+export function createBtcAddress(seedHex: string, receiveOrChange: string, addresIndex: string,  network: string): string {
     const root = bip32.fromSeed(Buffer.from(seedHex, "hex"));
-    const path = "m/44'/1'/0'/0/0";
+    let path = "m/44'/0'/0'/0/" + addresIndex + "";
+    if(receiveOrChange === '1') {
+        path = "m/44'/0'/0'/1/" + addresIndex + "";
+    }
     const child = root.derivePath(path);
     const { address } = bitcoin.payments.p2pkh({
         pubkey: child.publicKey,
@@ -22,12 +25,11 @@ export function createAddress(seedHex: string, network: string): string {
 
 /**
  * 暂不支持taproot签名
- * @param privateKey 
- * @param signObj 
- * @param network 
- * @returns 
+ * @returns
+ * @param params
  */
-export function sign(privateKey: string, signObj: any, network: string): string {
+export function signBtcTransaction(params): string {
+    const {privateKey, signObj, network} = params
     const net = bitcore.Networks[network];
     const inputs = signObj.inputs.map(input => {
         return {

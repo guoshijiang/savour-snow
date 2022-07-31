@@ -17,12 +17,13 @@ const { Serialize: {
 
 /**
  * Get address from seed
- * @param seedHex 
- * @returns 
+ * @param seedHex
+ * @param addressIndex
+ * @returns
  */
-export function createAddress(seedHex: string): string {
+export function createEosAddress(seedHex: string, addressIndex: string): string {
     const node = bip32.fromSeed(Buffer.from(seedHex, "hex"));
-    const child = node.derivePath(`m/44'/194'/0'/0/0`);
+    const child = node.derivePath("m/44'/194'/0'/0/" +  addressIndex + "");
     const privateKey = child.privateKey.toString('hex');
     const publickKey = child.publicKey.toString('hex');
     return JSON.stringify({
@@ -33,11 +34,11 @@ export function createAddress(seedHex: string): string {
 
 /**
  * Eos Sign
- * @param signObj 
- * @param privateKeyHex 
- * @returns 
+ * @param signObj
+ * @param privateKeyHex
+ * @returns
  */
-export async function signTransaction(params: any) {
+export async function signEosTransaction(params: any) {
     const { privateKey, chainId, from, to, quantity, memo, expiration, block, prefix } = params;
     const TRANSFER_ACTION_ACOUNT = "eosio.token";
     const TRANSFER_ACTION_NAME = "transfer";
@@ -105,8 +106,8 @@ export async function signTransaction(params: any) {
 
 /**
  * 对签名data进行abi编码
- * @param data 
- * @returns 
+ * @param data
+ * @returns
  */
 function dataToAbiBinargs(data) {
     const eosioContract = getContract(EOS_TOKEN_ABI);
@@ -114,8 +115,8 @@ function dataToAbiBinargs(data) {
 }
 /**
  * 获取eos.token合约
- * @param abi 
- * @returns 
+ * @param abi
+ * @returns
  */
 function getContract(abi) {
     const types = getTypesFromAbi(createInitialTypes(), abi);

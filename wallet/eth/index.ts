@@ -1,16 +1,17 @@
 const ethers = require("ethers");
 /**
  * Get address from seed
- * @param seedHex 
- * @returns 
+ * @param seedHex
+ * @param addressIndex
+ * @returns
  */
-export function createAddress(seedHex: string) {
+export function createEthAddress(seedHex: string, addressIndex: string) {
     const hdNode = ethers.utils.HDNode.fromSeed(Buffer.from(seedHex, "hex"));
     const {
         privateKey,
         publicKey,
         address
-    } = hdNode.derivePath("m/44'/60'/0'/0/0");
+    } = hdNode.derivePath("m/44'/60'/0'/0/" +  addressIndex + "");
     return JSON.stringify({
         privateKey,
         publicKey,
@@ -19,12 +20,12 @@ export function createAddress(seedHex: string) {
 }
 
 /**
- * sign transaction 
- * @param privateKeyHex 
- * @param tx 
- * @returns 
+ * sign transaction
+ * @param privateKeyHex
+ * @param tx
+ * @returns
  */
-export async function signTransaction(params: any): Promise<string> {
+export async function signEthTransaction(params: any): Promise<string> {
     // privateKey remove 0x
     const { privateKey, nonce, from, to, gasLimit, gasPrice, amount, data, decimal, chainId, maxFeePerGas, maxPriorityFeePerGas, tokenAddress } = params;
     const wallet = new ethers.Wallet(Buffer.from(privateKey, "hex"));

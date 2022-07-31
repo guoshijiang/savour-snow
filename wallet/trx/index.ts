@@ -27,12 +27,13 @@ const MAX_AMOUNT_SAFE = Number.MAX_SAFE_INTEGER;
 const ADDRESS_PREFIX = "41";
 /**
  * Get address from seed
- * @param seedHex 
- * @returns 
+ * @param seedHex
+ * @param addressIndex
+ * @returns
  */
-export function createAddress(seedHex: string): string {
+export function createTrxAddress(seedHex: string, addressIndex:string): string {
     const node = bip32.fromSeed(Buffer.from(seedHex, "hex"));
-    const child = node.derivePath(`m/44'/195'/0'/0/0`);
+    const child = node.derivePath("m/44'/195'/0'/0/" + addressIndex + "");
     const privateKey = child.privateKey.toString('hex');
     const publickKey = child.publicKey.toString('hex');
     const address = getBase58CheckAddress(computeAddress(hexStr2byteArray(publickKey)));
@@ -61,12 +62,12 @@ function computeAddress(pubBytes) {
 }
 
 /**
- * sign transaction 
- * @param privateKeyHex 
- * @param tx 
- * @returns 
+ * sign transaction
+ * @param privateKeyHex
+ * @param tx
+ * @returns
  */
-export async function signTransaction(params: any): Promise<string> {
+export async function signTrxTransaction(params: any): Promise<string> {
     const { privateKey, from, to, amount, energyLimit, energyPrice, refBlock, tokenAddress, tokenTRC10, expiration } = params;
     const time = Date.now();
     const feeLimit = energyLimit * energyPrice; // SUN
