@@ -1,5 +1,7 @@
 
-const { signTransaction } = require("../../dist/wallet/eth/index");
+const { signEthTransaction, verifyEthAddress, importEthAddress } = require("../../dist/wallet/eth/index");
+const ethers = require("ethers");
+const { privateToAddress } = require("ethereumjs-util");
 async function testSign() {
     const params = {
         "privateKey": "9615abb43a2995bb9716c65e3386681981e71cd19b8e73ebe82779b633e16e5b",
@@ -13,9 +15,16 @@ async function testSign() {
         "chainId": 3,
         "tokenAddress": "0x00"
     }
-    const rawHex = await signTransaction(params);
+    const rawHex = await signEthTransaction(params);
     console.log(rawHex);
 }
 testSign();
 
+console.log(verifyEthAddress({
+    address: "sdasd"
+}));
 
+console.log("privkey to address:", privateToAddress("0x9615abb43a2995bb9716c65e3386681981e71cd19b8e73ebe82779b633e16e5b").toString("hex"))
+
+
+console.log("addr:",importEthAddress({ privateKey: "0x9615abb43a2995bb9716c65e3386681981e71cd19b8e73ebe82779b633e16e5b" }))
