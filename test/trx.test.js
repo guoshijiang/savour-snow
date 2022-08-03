@@ -1,4 +1,4 @@
-const { createAddress, signTransaction } = require("../dist/wallet/trx/index");
+const { createTrxAddress, signTrxTransaction ,verifyTrxAddress} = require("../dist/wallet/trx/index");
 const { mnemonicToSeed } = require("../dist/wallet/bip/bip");
 
 (async function () {
@@ -9,7 +9,7 @@ const { mnemonicToSeed } = require("../dist/wallet/bip/bip");
         password: ""
     }
     const seed = mnemonicToSeed(params_1)
-    const account = createAddress(seed.toString("hex"))
+    const account = createTrxAddress(seed.toString("hex"),"1")
     console.log(account)
 
     const data = {
@@ -25,6 +25,10 @@ const { mnemonicToSeed } = require("../dist/wallet/bip/bip");
             "blockNumHex": "2712ce0"
         }
     }
-    const rawHex = await signTransaction(data);
+    const rawHex = await signTrxTransaction(data);
     console.log(rawHex);
+
+    console.log(verifyTrxAddress({
+        address: "TKTcQznYKjAy4cZVyFwmAr2SLpUibdpB8q",
+    }));
 })();

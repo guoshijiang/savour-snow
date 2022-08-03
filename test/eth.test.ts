@@ -3,8 +3,9 @@ import {
     mnemonicToSeed
 } from "../wallet/bip/bip";
 import {
-    createAddress,
-    signTransaction
+    createEthAddress,
+    signEthTransaction,
+    importEthAddress
 } from "../wallet/eth/index";
 
 
@@ -17,7 +18,7 @@ describe('eth unit test case', () => {
         }
         const seed = mnemonicToSeed(params_1)
         console.log(seed);
-        const account = createAddress(seed.toString("hex"))
+        const account = createEthAddress(seed.toString("hex"), "1")
         console.log(account)
     });
 
@@ -28,8 +29,8 @@ describe('eth unit test case', () => {
             password: ""
         }
         const seed = mnemonicToSeed(params_1)
-        const account = createAddress(seed.toString("hex"))
-        const rawHex = await signTransaction({
+        const account = createEthAddress(seed.toString("hex"), "1")
+        const rawHex = await signEthTransaction({
             "privateKey": JSON.parse(account).privateKey.replace("0x", ""),
             "nonce": 0,
             "from": "0x6a5527BD42cf4b73c789B051c9bf5D244e3Cf9Ef",

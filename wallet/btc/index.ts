@@ -5,10 +5,10 @@ const bitcoin = require("bitcoinjs-lib");
 const bitcore = require("bitcore-lib");
 // bitcoin.initEccLib(ecc); // NEED THIS FOR TAPROOT
 
-export function createBtcAddress(seedHex: string, receiveOrChange: string, addresIndex: string,  network: string): string {
+export function createBtcAddress(seedHex: string, receiveOrChange: string, addresIndex: string, network: string): string {
     const root = bip32.fromSeed(Buffer.from(seedHex, "hex"));
     let path = "m/44'/0'/0'/0/" + addresIndex + "";
-    if(receiveOrChange === '1') {
+    if (receiveOrChange === '1') {
         path = "m/44'/0'/0'/1/" + addresIndex + "";
     }
     const child = root.derivePath(path);
@@ -29,7 +29,7 @@ export function createBtcAddress(seedHex: string, receiveOrChange: string, addre
  * @param params
  */
 export function signBtcTransaction(params): string {
-    const {privateKey, signObj, network} = params
+    const { privateKey, signObj, network } = params
     const net = bitcore.Networks[network];
     const inputs = signObj.inputs.map(input => {
         return {
@@ -52,3 +52,29 @@ export function signBtcTransaction(params): string {
     return transaction.toString();
 }
 
+/**
+ * address
+ * network type
+ * @param params 
+ */
+export function verifyBtcAddress(params: any) {
+    const { address, network } = params;
+    const net = bitcore.Networks[network];
+    return bitcore.Address.isValid(address, net);
+}
+
+/**
+ * import address
+ * private key
+ * network
+ * @param params 
+ */
+export function importBtcAddress(params: any) {
+    const { privateKey, network } = params;
+    const net = bitcore.Networks[network];
+    if (!bitcore.PrivateKey.isValid(privateKey)) {
+        throw new Error("PrivateKey is not valid.");
+    }
+    const address = bitcore.PrivateKey(privateKey, net).toAddress().toString("hex")
+    return address;
+}

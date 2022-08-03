@@ -1,4 +1,5 @@
 const ethers = require("ethers");
+const { privateToAddress } = require("ethereumjs-util");
 /**
  * Get address from seed
  * @param seedHex
@@ -11,7 +12,7 @@ export function createEthAddress(seedHex: string, addressIndex: string) {
         privateKey,
         publicKey,
         address
-    } = hdNode.derivePath("m/44'/60'/0'/0/" +  addressIndex + "");
+    } = hdNode.derivePath("m/44'/60'/0'/0/" + addressIndex + "");
     return JSON.stringify({
         privateKey,
         publicKey,
@@ -57,4 +58,25 @@ export async function signEthTransaction(params: any): Promise<string> {
         tx.data = data;
     }
     return await wallet.signTransaction(tx);
+}
+
+/**
+ * address
+ * network type
+ * @param params 
+ */
+export function verifyEthAddress(params: any) {
+    const { address } = params;
+    return ethers.utils.isAddress(address);
+}
+/**
+ * import address
+ * private key
+ * network
+ * @param params 
+ */
+export function importEthAddress(params: any) {
+    const { privateKey } = params;
+    const address = privateToAddress(privateKey).toString("hex");
+    return `0x${address}`;
 }

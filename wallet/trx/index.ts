@@ -4,7 +4,7 @@ const bip32 = BIP32Factory(ecc);
 import { keccak256 } from "js-sha3";
 import { hexStr2byteArray } from "@tronscan/client/src/lib/code";
 import { publicKeyConvert } from "secp256k1";
-import { getBase58CheckAddress, signTransaction as cryptoSignTransaction, decode58Check } from "@tronscan/client/src/utils/crypto";
+import { getBase58CheckAddress, signTransaction as cryptoSignTransaction, decode58Check, isAddressValid } from "@tronscan/client/src/utils/crypto";
 import { byteArray2hexStr } from "@tronscan/client/src/utils/bytes";
 import { ethers } from "ethers";
 import BigNumber from "bignumber.js";
@@ -31,7 +31,7 @@ const ADDRESS_PREFIX = "41";
  * @param addressIndex
  * @returns
  */
-export function createTrxAddress(seedHex: string, addressIndex:string): string {
+export function createTrxAddress(seedHex: string, addressIndex: string): string {
     const node = bip32.fromSeed(Buffer.from(seedHex, "hex"));
     const child = node.derivePath("m/44'/195'/0'/0/" + addressIndex + "");
     const privateKey = child.privateKey.toString('hex');
@@ -86,6 +86,17 @@ export async function signTrxTransaction(params: any): Promise<string> {
     let signedTx: any = signTx(privateKey, rawTx);
     return signedTx.hex;
 }
+
+/**
+ * address
+ * network type
+ * @param params 
+ */
+export function verifyTrxAddress(params: any) {
+    const { address } = params;
+    return isAddressValid(address);
+}
+
 
 function signTx(privateKey, transaction) {
     let signedTx = cryptoSignTransaction(privateKey, transaction);

@@ -1,7 +1,7 @@
 
 
 
-const { createAddress, sign } = require("../dist/wallet/btc/index");
+const { createBtcAddress, signBtcTransaction, verifyBtcAddress, importBtcAddress } = require("../dist/wallet/btc/index");
 const { mnemonicToSeed } = require("../dist/wallet/bip/bip");
 
 const mnemonic = "chief unit purity initial lock stamp buzz nerve wisdom flush venture fun";
@@ -10,7 +10,7 @@ const params_1 = {
     password: ""
 }
 const seed = mnemonicToSeed(params_1)
-const account = createAddress(seed.toString("hex"), "testnet")
+const account = createBtcAddress(seed.toString("hex"), "1", "1", "mainnet")
 console.log(account)
 const data = {
     inputs: [
@@ -28,5 +28,18 @@ const data = {
         },
     ],
 };
-const rawHex = sign("2ca7c5e229cef6da216e75bec60e593d27c52ad68b05f80d300c2177b2d35953", data, "mainnet");
+const rawHex = signBtcTransaction({
+    privateKey: "2ca7c5e229cef6da216e75bec60e593d27c52ad68b05f80d300c2177b2d35953",
+    signObj: data,
+    network: "mainnet"
+});
 console.log(rawHex);
+console.log(verifyBtcAddress({
+    address: "1H1oAqmdfTNECrrHFAJ4AhbTUyPcQjrf72",
+    network: "mainnet"
+}));
+
+console.log(importBtcAddress({
+    privateKey: "KxiWpxPqhcwwQTEtSy1JdwtRRvRVXaaVDaDUKXe58UeeS8sYUkSV",
+    network: "mainnet"
+}));

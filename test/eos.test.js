@@ -1,7 +1,7 @@
 
 
 
-const { createAddress, signTransaction } = require("../dist/wallet/eos/index");
+const { createEosAddress, signEosTransaction, verifyAddress, } = require("../dist/wallet/eos/index");
 const { mnemonicToSeed } = require("../dist/wallet/bip/bip");
 (async function () {
 
@@ -11,7 +11,7 @@ const { mnemonicToSeed } = require("../dist/wallet/bip/bip");
         password: ""
     }
     const seed = mnemonicToSeed(params_1)
-    const account = createAddress(seed.toString("hex"), "testnet")
+    const account = createEosAddress(seed.toString("hex"), 0)
     console.log(account)
     const data = {
         privateKey: "5JggnGLRyTVAZngqBF9uHAdNyvLVdZtygS1DUgR6FMQSUF9EHNf",
@@ -25,6 +25,11 @@ const { mnemonicToSeed } = require("../dist/wallet/bip/bip");
         block: 34244,
         prefix: 1861994069
     };
-    const rawHex = await signTransaction(data);
+    const rawHex = await signEosTransaction(data);
     console.log(rawHex);
+
+    console.log(verifyAddress({
+        address: "aa56"
+    }));
+   
 })();

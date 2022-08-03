@@ -23,7 +23,7 @@ const { Serialize: {
  */
 export function createEosAddress(seedHex: string, addressIndex: string): string {
     const node = bip32.fromSeed(Buffer.from(seedHex, "hex"));
-    const child = node.derivePath("m/44'/194'/0'/0/" +  addressIndex + "");
+    const child = node.derivePath("m/44'/194'/0'/0/" + addressIndex + "");
     const privateKey = child.privateKey.toString('hex');
     const publickKey = child.publicKey.toString('hex');
     return JSON.stringify({
@@ -102,6 +102,16 @@ export async function signEosTransaction(params: any) {
         txid: txid
     };
     return JSON.stringify(rawTx);
+}
+
+/**
+ * address
+ * network type
+ * @param params 
+ */
+export function verifyEosAddress(params: any) {
+    const { address } = params;
+    return /^[a-z.1-5]{0,11}[a-z1-5]$/.test(address);
 }
 
 /**
