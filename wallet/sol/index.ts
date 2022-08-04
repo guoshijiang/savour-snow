@@ -74,3 +74,10 @@ export function verifySolAddress(params: any) {
     const { address } = params;
     return /^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(address);
 }
+
+
+export function importSolAddress(params: any) {
+    const { privateKey } = params;
+    const keyPairs = Keypair.fromSecretKey(Buffer.from(privateKey, "hex"));
+    return bs58.encode(keyPairs.publicKey);
+}

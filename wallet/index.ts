@@ -1,6 +1,6 @@
-import { createBtcAddress, signBtcTransaction } from "./btc"
-import { createEthAddress, signEthTransaction } from "./eth"
-import { createSolAddress, signSolTransaction } from "./sol"
+import { createBtcAddress, signBtcTransaction, importBtcAddress } from "./btc"
+import { createEthAddress, signEthTransaction, importEthAddress } from "./eth"
+import { createSolAddress, signSolTransaction, importSolAddress } from "./sol"
 import { createEosAddress, signEosTransaction } from "./eos"
 import { Decrypt, Encrypt }  from "../secret"
 import {generateMnemonic, encodeMnemonic, decodeMnemonic, mnemonicToSeed, validateMnemonic } from "./bip/bip"
@@ -117,6 +117,30 @@ export function SignTransaction(chain, params) {
     // solana 系列币种
     if (SolanaSeries.includes(chain)) {
         return signSolTransaction(params)
+    }
+}
+
+
+export function PrivateKeyToAddress(chain, params) {
+    // bitcoin 系列币种
+    if (BitcoinSeries.includes(chain)) {
+        return importBtcAddress(params)
+    }
+    // eth 系列币种
+    if (EthereumSeries.includes(chain)) {
+        return importEthAddress(params)
+    }
+    // solana 系列币种
+    if (SolanaSeries.includes(chain)) {
+        return importSolAddress(params)
+    }
+    // cosmos 生态币种
+    if (CosmosSeries.includes(chain)) {
+        throw new Error("Don't support this chain");
+    }
+    // eos 系列币种
+    if (EosSeries.includes(chain)) {
+        throw new Error("Don't support this chain");
     }
 }
 
