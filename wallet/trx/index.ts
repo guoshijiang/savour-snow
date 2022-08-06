@@ -1,10 +1,7 @@
 const ecc = require("tiny-secp256k1");
 const { BIP32Factory } = require("bip32");
 const bip32 = BIP32Factory(ecc);
-import { keccak256 } from "js-sha3";
-import { hexStr2byteArray } from "@tronscan/client/src/lib/code";
-import { publicKeyConvert } from "secp256k1";
-import { getBase58CheckAddress, signTransaction as cryptoSignTransaction, decode58Check, isAddressValid } from "@tronscan/client/src/utils/crypto";
+import { signTransaction as cryptoSignTransaction, decode58Check, isAddressValid ,pkToAddress} from "@tronscan/client/src/utils/crypto";
 import { byteArray2hexStr } from "@tronscan/client/src/utils/bytes";
 import { ethers } from "ethers";
 import BigNumber from "bignumber.js";
@@ -24,7 +21,6 @@ BigNumber.config({
 const NULLTOKENADDR = "T000000000000000000000000000000000";
 const EXPIRATIONMS = 7200000; // 2 hours by default // 60000 * 60 * 2
 const MAX_AMOUNT_SAFE = Number.MAX_SAFE_INTEGER;
-const ADDRESS_PREFIX = "41";
 /**
  * Get address from seed
  * @param seedHex
@@ -36,29 +32,12 @@ export function createTrxAddress(seedHex: string, addressIndex: string): string 
     const child = node.derivePath("m/44'/195'/0'/0/" + addressIndex + "");
     const privateKey = child.privateKey.toString('hex');
     const publickKey = child.publicKey.toString('hex');
-    const address = getBase58CheckAddress(computeAddress(hexStr2byteArray(publickKey)));
+    const address = pkToAddress(privateKey).toString("hex");
     return JSON.stringify({
         privateKey,
         publickKey,
         address
     });
-}
-
-function computeAddress(pubBytes) {
-    let pubKeyBytes;
-    if (pubBytes.length === 65) {
-        pubKeyBytes = pubBytes.slice(1);
-    } else if (pubBytes.length === 33) {
-        pubKeyBytes = new Uint8Array(pubBytes);
-        pubKeyBytes = publicKeyConvert(pubKeyBytes, false);
-        pubKeyBytes = pubKeyBytes.slice(1);
-    } else {
-        throw new Error("the format of public key is not supported");
-    }
-    const hash = keccak256(pubKeyBytes).toString();
-    let addressHex = hash.substring(24);
-    addressHex = ADDRESS_PREFIX + addressHex;
-    return hexStr2byteArray(addressHex);
 }
 
 /**
@@ -95,6 +74,18 @@ export async function signTrxTransaction(params: any): Promise<string> {
 export function verifyTrxAddress(params: any) {
     const { address } = params;
     return isAddressValid(address);
+}
+
+/**
+ * import address
+ * private key
+ * network
+ * @param params 
+ */
+ export function importTrxAddress(params: any) {
+    const { privateKey } = params;
+    const address = pkToAddress(privateKey).toString("hex");
+    return address;
 }
 
 
