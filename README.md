@@ -4,7 +4,7 @@ parent:
 -->
 
 <div align="center">
-  <h1> snow 项目 </h1>
+  <h1> snow repo </h1>
 </div>
 
 <div align="center">
@@ -16,51 +16,54 @@ parent:
   </a>
 </div>
 
-snow 是 Savour 钱包的 sdk 项目
+snow is the sdk project for Savour wallet
 
 
-## 安装
+## Install
 
-### 安装依赖
+### install dependencies
 ```bash
 npm install
 ```
-### 构建程序
+### build 
 ```bash
 npm run build 
 ```
 
-### 运行test 文件
+### run test
 
 
-## 贡献代码
+## Contribute
 
-### 第一步： fork 仓库
+### 1.fork repo
 
-将 snow fork 到您自己的代码仓库
+fork savour-hd to your github
 
-### 第二步： clone 您自己仓库的代码
+### 2.clone repo
 
 ```bash
 git@github.com:guoshijiang/snow.git
 ```
 
-### 第三步：建立分支编写提交代码
+### 3. create new branch and commit code
 
 ```bash
 git branch -C xxx
 git checkout xxx
-编写您的代码
+
+coding 
+
 git add .
 git commit -m "xxx"
 git push origin xxx
 ```
 
-### 第四步：提交 PR
+### 4.commit PR
 
-到你的 github 上面有一个 pr, 提交到 snow 代码库
+Have a pr on your github and submit it to the savour-hd repository
 
 
-### 第五步：review 完成
+### 5.review 
 
-待 snow 代码维护者 review 通过之后代码会合并到 snow 库中，至此，您的 PR 就提交完成了 
+After the snow code maintainer has passed the review, the code will be merged into the snow library. At this point, your PR submission is complete
+
